@@ -346,6 +346,38 @@
       color: var(--gray);
     }
 
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .skill-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .skill-item {
+      font-size: 14px;
+      color: var(--white);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.4;
+    }
+
+    .skill-item:last-child { border-bottom: none; }
+
     /* ── Responsive ── */
     @media (max-width: 520px) {
       .stats-grid { grid-template-columns: 1fr; }
@@ -363,6 +395,7 @@
       <ul class="nav-links">
         <li><a href="#numbers">Numbers</a></li>
         <li><a href="#story">Story</a></li>
+        <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -470,6 +503,60 @@
           Pushing the frontier of <strong>AI-driven perception</strong>.
           Building, publishing, competing. Learning every single day.
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label">Skills</p>
+      <div class="skills-grid">
+
+        <div>
+          <p class="skill-group-title">Drones &amp; Robotics</p>
+          <div class="skill-list">
+            <div class="skill-item">FPV Drone Building &amp; Flying</div>
+            <div class="skill-item">Autonomous Drone Systems</div>
+            <div class="skill-item">Pipeline Inspection Drones</div>
+            <div class="skill-item">Autonomous Robotics</div>
+            <div class="skill-item">Flight Controller Configuration</div>
+          </div>
+        </div>
+
+        <div>
+          <p class="skill-group-title">AI &amp; Machine Learning</p>
+          <div class="skill-list">
+            <div class="skill-item">AI Agents &amp; Multi-agent Systems</div>
+            <div class="skill-item">LLM Fine-tuning</div>
+            <div class="skill-item">RAG &amp; Multi-model Routing</div>
+            <div class="skill-item">Neuromorphic Vision</div>
+            <div class="skill-item">Visual Perception &amp; Reasoning</div>
+          </div>
+        </div>
+
+        <div>
+          <p class="skill-group-title">Computer Vision</p>
+          <div class="skill-list">
+            <div class="skill-item">OpenCV</div>
+            <div class="skill-item">Depth Estimation</div>
+            <div class="skill-item">Event Cameras</div>
+            <div class="skill-item">3D Spatial Reasoning</div>
+            <div class="skill-item">Real-time Object Detection</div>
+          </div>
+        </div>
+
+        <div>
+          <p class="skill-group-title">Engineering</p>
+          <div class="skill-list">
+            <div class="skill-item">Python</div>
+            <div class="skill-item">JavaScript / Node.js</div>
+            <div class="skill-item">FastAPI</div>
+            <div class="skill-item">Google Cloud Run</div>
+            <div class="skill-item">Monte Carlo Simulation</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
