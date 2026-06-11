@@ -86,6 +86,23 @@
       border-bottom: 1px solid var(--border);
     }
 
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: flex-start;
+    }
+
+    .hero-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+      object-position: top center;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+
     .hero-label {
       font-size: 12px;
       font-weight: 500;
@@ -502,18 +519,23 @@
   <!-- Hero -->
   <section id="hero">
     <div class="container">
-      <p class="hero-label">Researcher · Builder · Student</p>
-      <h1 class="hero-name">jayaditya</h1>
-      <p class="hero-tagline">
-        From a small town in India to the frontier of <span>AI &amp; perception research.</span>
-        Building things that matter at the intersection of neuroscience and machines.
-      </p>
-      <a href="mailto:jaygamertak@gmail.com" class="hero-cta">
-        Get in touch
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </a>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <p class="hero-label">Researcher · Builder · Solopreneur</p>
+          <h1 class="hero-name">jayaditya</h1>
+          <p class="hero-tagline">
+            Building <span>physical AI systems</span> at the intersection of
+            perception, edge inference, and autonomous hardware.
+          </p>
+          <a href="mailto:jaygamertak@gmail.com" class="hero-cta">
+            Get in touch
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+        <img src="photo.jpeg" alt="Jayaditya at YC Startup School India" class="hero-photo" />
+      </div>
 
       <div class="socials">
         <a href="https://github.com/Jay-Aditya-16" class="social-link" target="_blank" rel="noopener">
@@ -531,6 +553,13 @@
       </div>
     </div>
   </section>
+
+  <style>
+    @media (max-width: 580px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-photo { width: 120px; height: 120px; order: -1; }
+    }
+  </style>
 
   <!-- Sentrix Robotics -->
   <section id="sentrix">
