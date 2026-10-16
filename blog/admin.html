@@ -25,43 +25,86 @@
     /* ── LOGIN ── */
     .login-screen {
       display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 32px;
+      min-height: 100vh; padding: 32px 20px;
     }
     .login-box {
-      width: 100%; max-width: 400px;
-      border: 1px solid var(--border-mid); border-radius: 12px;
-      padding: 40px 36px; background: var(--surface);
+      width: 100%; max-width: 440px;
+      border: 1px solid var(--border-mid); border-radius: 14px;
+      padding: 44px 36px; background: var(--surface);
+    }
+    .login-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+    }
+    .lock-pill {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--green);
+      background: rgba(45,212,160,0.12); border: 1px solid rgba(45,212,160,0.25);
+      padding: 4px 10px; border-radius: 100px;
     }
     .login-box h1 {
-      font-size: 24px; font-weight: 900; letter-spacing: -0.025em;
-      margin-bottom: 8px;
+      font-size: 26px; font-weight: 900; letter-spacing: -0.025em;
     }
-    .login-box p { font-size: 14px; color: var(--gray); margin-bottom: 28px; line-height: 1.6; }
-    .login-box label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px; }
-    .login-box input {
+    .login-box p {
+      font-size: 14px; color: var(--gray); margin-bottom: 28px; line-height: 1.65;
+    }
+    .login-box label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px;
+    }
+    .input-wrapper {
+      position: relative; width: 100%; margin-bottom: 16px;
+    }
+    .login-box input[type="password"],
+    .login-box input[type="text"] {
       width: 100%; background: var(--black); border: 1px solid var(--border-mid);
-      color: var(--white); font-family: inherit; font-size: 14px;
-      padding: 12px 16px; border-radius: 7px; margin-bottom: 20px;
-      outline: none; transition: border-color 0.15s;
+      color: var(--white); font-family: 'SF Mono', monospace; font-size: 13px;
+      padding: 13px 46px 13px 16px; border-radius: 8px; outline: none;
+      transition: border-color 0.15s;
     }
-    .login-box input:focus { border-color: #444; }
-    .login-error { color: var(--red); font-size: 13px; margin-bottom: 16px; display: none; }
+    .login-box input:focus { border-color: #555; }
+    .toggle-visibility {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--gray); cursor: pointer;
+      font-size: 14px; padding: 6px; display: flex; align-items: center; justify-content: center;
+    }
+    .toggle-visibility:hover { color: var(--white); }
+
+    .checkbox-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+      font-size: 13px; color: var(--gray); user-select: none;
+    }
+    .checkbox-row input { accent-color: var(--white); cursor: pointer; }
+
+    .token-guide {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 24px;
+      font-size: 12px; line-height: 1.6; color: var(--gray);
+    }
+    .token-guide a {
+      color: var(--white); font-weight: 600; text-decoration: underline; text-underline-offset: 2px;
+    }
+
+    .login-error {
+      background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3);
+      color: var(--red); font-size: 13px; padding: 10px 14px;
+      border-radius: 6px; margin-bottom: 18px; display: none; line-height: 1.5;
+    }
 
     /* ── BUTTONS ── */
     .btn {
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 8px; justify-content: center;
       font-family: inherit; font-size: 13px; font-weight: 700;
-      padding: 10px 20px; border-radius: 7px; border: none;
+      padding: 11px 22px; border-radius: 8px; border: none;
       cursor: pointer; transition: opacity 0.15s, transform 0.1s;
     }
     .btn:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-primary { background: var(--white); color: var(--black); }
     .btn-ghost { background: none; color: var(--gray); border: 1px solid var(--border-mid); }
-    .btn-ghost:hover { color: var(--white); border-color: #444; }
+    .btn-ghost:hover { color: var(--white); border-color: #555; }
     .btn-green { background: var(--green); color: var(--black); }
     .btn-red { background: var(--red); color: var(--black); }
-    .btn-blue { background: var(--blue); color: var(--black); }
     .btn-sm { font-size: 11px; padding: 6px 12px; }
 
     /* ── ADMIN LAYOUT ── */
@@ -71,30 +114,50 @@
       flex-wrap: wrap; gap: 16px;
       padding: 32px 0; border-bottom: 1px solid var(--border);
     }
-    .admin-header h1 { font-size: 24px; font-weight: 900; letter-spacing: -0.025em; }
+    .admin-title-area { display: flex; flex-direction: column; gap: 4px; }
+    .admin-header h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.025em; }
+    .admin-user-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--green);
+    }
+    .admin-user-badge::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); display: inline-block;
+    }
     .admin-actions { display: flex; gap: 10px; align-items: center; }
 
     /* ── POST LIST ── */
     .admin-posts { padding: 16px 0 80px; }
     .admin-post-item {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; padding: 18px 0;
+      gap: 16px; padding: 20px 0;
       border-bottom: 1px solid var(--border);
     }
     .admin-post-item:last-child { border-bottom: none; }
     .admin-post-info { flex: 1; min-width: 0; }
-    .admin-post-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .admin-post-date { font-size: 12px; color: var(--gray); }
+    .admin-post-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .admin-post-meta {
+      display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--gray);
+    }
     .admin-post-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
     .status-badge {
       font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
       text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
     }
-    .status-public { background: rgba(45,212,160,0.15); color: var(--green); }
-    .status-private { background: rgba(248,113,113,0.15); color: var(--red); }
-    .empty-admin { padding: 60px 0; text-align: center; font-size: 14px; color: var(--gray); }
+    .status-public {
+      background: rgba(45,212,160,0.15); color: var(--green);
+      border: 1px solid rgba(45,212,160,0.25);
+    }
+    .status-private {
+      background: rgba(248,113,113,0.15); color: var(--red);
+      border: 1px solid rgba(248,113,113,0.25);
+    }
+    .empty-admin { padding: 70px 0; text-align: center; font-size: 14px; color: var(--gray); }
 
-    /* ── EDITOR ── */
+    /* ── EDITOR OVERLAY ── */
     .editor-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
       background: var(--black); overflow-y: auto;
@@ -105,7 +168,7 @@
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
     }
-    .editor-top h2 { font-size: 20px; font-weight: 800; }
+    .editor-top h2 { font-size: 22px; font-weight: 800; }
     .field-group { margin-bottom: 24px; }
     .field-group label {
       font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
@@ -117,8 +180,11 @@
       padding: 12px 16px; border-radius: 7px; outline: none;
       transition: border-color 0.15s;
     }
-    .field-group input:focus, .field-group textarea:focus { border-color: #444; }
-    .field-group textarea { min-height: 340px; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; }
+    .field-group input:focus, .field-group textarea:focus { border-color: #555; }
+    .field-group textarea {
+      min-height: 360px; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px; line-height: 1.65;
+    }
 
     /* ── TOOLBAR ── */
     .toolbar {
@@ -138,22 +204,29 @@
     /* ── PREVIEW ── */
     .preview-area {
       display: none; background: var(--surface); border: 1px solid var(--border-mid);
-      border-radius: 7px; padding: 24px; min-height: 200px;
-      font-size: 15px; line-height: 1.8;
+      border-radius: 7px; padding: 28px; min-height: 240px;
+      font-size: 15px; line-height: 1.85;
     }
     .preview-area.open { display: block; }
     .preview-area h2 { font-size: 22px; font-weight: 800; margin: 24px 0 12px; }
-    .preview-area h3 { font-size: 17px; font-weight: 700; margin: 20px 0 10px; }
+    .preview-area h3 { font-size: 18px; font-weight: 700; margin: 20px 0 10px; }
     .preview-area p { margin-bottom: 16px; color: var(--white); }
     .preview-area ul { margin: 0 0 16px 20px; }
     .preview-area li { margin-bottom: 6px; }
-    .preview-area blockquote { border-left: 3px solid var(--border-mid); padding: 8px 16px; color: var(--gray); margin: 16px 0; font-style: italic; }
-    .preview-area code { font-family: 'SF Mono', 'Fira Code', monospace; background: var(--black); padding: 2px 6px; border-radius: 3px; font-size: 13px; }
-    .preview-area pre { background: var(--black); border: 1px solid var(--border-mid); border-radius: 6px; padding: 16px; margin: 16px 0; overflow-x: auto; }
+    .preview-area blockquote {
+      border-left: 3px solid var(--border-mid); padding: 8px 16px;
+      color: var(--gray); margin: 16px 0; font-style: italic;
+    }
+    .preview-area code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--black); padding: 2px 6px; border-radius: 3px; font-size: 13px;
+    }
+    .preview-area pre {
+      background: var(--black); border: 1px solid var(--border-mid);
+      border-radius: 6px; padding: 16px; margin: 16px 0; overflow-x: auto;
+    }
     .preview-area pre code { background: none; padding: 0; }
-    .preview-area a { color: var(--blue); text-decoration: underline; }
-    .preview-area strong { color: var(--white); font-weight: 700; }
-    .preview-area em { color: var(--gray); }
+    .preview-area a { color: var(--white); text-decoration: underline; }
 
     .editor-footer {
       display: flex; gap: 10px; flex-wrap: wrap;
@@ -161,7 +234,7 @@
       margin-top: 32px;
     }
 
-    /* ── TOAST ── */
+    /* ── TOAST & SPINNER ── */
     .toast {
       position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
       background: var(--surface); border: 1px solid var(--border-mid);
@@ -172,19 +245,19 @@
     .toast.show { opacity: 1; }
     .toast.error { border-color: var(--red); color: var(--red); }
 
-    /* ── SPINNER ── */
     .spinner {
-      display: inline-block; width: 16px; height: 16px;
-      border: 2px solid var(--border-mid); border-top-color: var(--white);
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(0,0,0,0.2); border-top-color: currentColor;
       border-radius: 50%; animation: spin 0.6s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 640px) {
-      .admin-post-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .admin-post-item { flex-direction: column; align-items: flex-start; gap: 12px; }
       .admin-post-actions { width: 100%; flex-wrap: wrap; }
       .editor-footer { flex-direction: column; }
-      .editor-footer .btn { width: 100%; justify-content: center; }
+      .editor-footer .btn { width: 100%; }
+      .login-box { padding: 32px 24px; }
     }
   </style>
 </head>
@@ -193,12 +266,37 @@
   <!-- ── LOGIN SCREEN ── -->
   <div class="login-screen" id="login-screen">
     <div class="login-box">
+      <div class="login-header">
+        <span class="lock-pill">PAT Protected</span>
+      </div>
       <h1>blog admin</h1>
-      <p>Enter your GitHub Personal Access Token to manage your blog. The token needs <code style="font-family:'SF Mono',monospace;background:var(--black);padding:2px 6px;border-radius:3px;font-size:13px;">repo</code> scope.</p>
-      <label for="token-input">GitHub PAT</label>
-      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
+      <p>Authenticate with your GitHub Personal Access Token. Only <strong>@Jay-Aditya-16</strong> with write permissions to this repo can log in.</p>
+
       <div class="login-error" id="login-error"></div>
-      <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;justify-content:center;">Sign In</button>
+
+      <label for="token-input">GitHub Token</label>
+      <div class="input-wrapper">
+        <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+        <button type="button" class="toggle-visibility" onclick="toggleTokenVisibility()" id="vis-btn" title="Toggle visibility">👁</button>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="remember-me" checked />
+        <label for="remember-me" style="text-transform:none;letter-spacing:normal;font-weight:normal;color:var(--gray);cursor:pointer;margin:0;">
+          Remember me on this browser
+        </label>
+      </div>
+
+      <button class="btn btn-primary" id="btn-login" onclick="handleLogin()" style="width:100%;">
+        Sign In
+      </button>
+
+      <div class="token-guide" style="margin-top:24px;margin-bottom:0;">
+        💡 Need a token?
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=Jay+Aditya+Blog+Admin" target="_blank" rel="noopener">
+          Generate GitHub PAT (classic) with <code>repo</code> scope →
+        </a>
+      </div>
     </div>
   </div>
 
@@ -206,14 +304,18 @@
   <div id="admin-panel" style="display:none;">
     <div class="admin-container">
       <div class="admin-header">
-        <h1>blog admin</h1>
+        <div class="admin-title-area">
+          <h1>blog admin</h1>
+          <span class="admin-user-badge" id="auth-status">Signed in as @Jay-Aditya-16 (Write verified)</span>
+        </div>
         <div class="admin-actions">
+          <a href="/blog/" target="_blank" class="btn btn-ghost">View Blog ↗</a>
           <button class="btn btn-primary" onclick="openEditor()">+ New Post</button>
           <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
         </div>
       </div>
       <div class="admin-posts" id="admin-posts">
-        <div class="empty-admin">Loading…</div>
+        <div class="empty-admin">Loading posts…</div>
       </div>
     </div>
   </div>
@@ -228,38 +330,38 @@
 
       <div class="field-group">
         <label for="ed-post-title">Title</label>
-        <input type="text" id="ed-post-title" placeholder="My awesome post" />
+        <input type="text" id="ed-post-title" placeholder="My new post title" />
       </div>
 
       <div class="field-group">
         <label for="ed-post-tags">Tags (comma-separated)</label>
-        <input type="text" id="ed-post-tags" placeholder="ai, robotics, thoughts" />
+        <input type="text" id="ed-post-tags" placeholder="ai, robotics, hardware" />
       </div>
 
       <div class="field-group">
         <label>Content (HTML)</label>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <span style="font-size:12px;color:var(--gray);">Write HTML — use toolbar to insert tags</span>
+          <span style="font-size:12px;color:var(--gray);">Write HTML content — use toolbar for tags</span>
           <button class="tool-btn" onclick="togglePreview()" id="preview-toggle">Preview</button>
         </div>
         <div class="toolbar" id="toolbar">
-          <button class="tool-btn" onclick="insertTag('strong')" title="Bold"><b>B</b></button>
-          <button class="tool-btn" onclick="insertTag('em')" title="Italic"><i>I</i></button>
-          <button class="tool-btn" onclick="insertTag('h2')" title="Heading 2">H2</button>
-          <button class="tool-btn" onclick="insertTag('h3')" title="Heading 3">H3</button>
-          <button class="tool-btn" onclick="insertCodeBlock()" title="Code Block">&lt;/&gt;</button>
-          <button class="tool-btn" onclick="insertLink()" title="Link">Link</button>
-          <button class="tool-btn" onclick="insertList()" title="List">• List</button>
-          <button class="tool-btn" onclick="insertTag('blockquote')" title="Quote">" Quote</button>
-          <button class="tool-btn" onclick="insertTag('p')" title="Paragraph">¶</button>
+          <button class="tool-btn" type="button" onclick="insertTag('strong')" title="Bold"><b>B</b></button>
+          <button class="tool-btn" type="button" onclick="insertTag('em')" title="Italic"><i>I</i></button>
+          <button class="tool-btn" type="button" onclick="insertTag('h2')" title="Heading 2">H2</button>
+          <button class="tool-btn" type="button" onclick="insertTag('h3')" title="Heading 3">H3</button>
+          <button class="tool-btn" type="button" onclick="insertCodeBlock()" title="Code Block">&lt;/&gt;</button>
+          <button class="tool-btn" type="button" onclick="insertLink()" title="Link">Link</button>
+          <button class="tool-btn" type="button" onclick="insertList()" title="List">• List</button>
+          <button class="tool-btn" type="button" onclick="insertTag('blockquote')" title="Quote">" Quote</button>
+          <button class="tool-btn" type="button" onclick="insertTag('p')" title="Paragraph">¶</button>
         </div>
-        <textarea id="ed-post-content" placeholder="<p>Write your post here…</p>"></textarea>
+        <textarea id="ed-post-content" placeholder="<p>Write your thoughts here...</p>"></textarea>
         <div class="preview-area" id="preview-area"></div>
       </div>
 
       <div class="editor-footer">
-        <button class="btn btn-ghost" onclick="savePost(false)" id="btn-draft">Save as Draft</button>
-        <button class="btn btn-green" onclick="savePost(true)" id="btn-publish">Publish</button>
+        <button class="btn btn-ghost" onclick="savePost(false)" id="btn-draft">Save as Draft (Private)</button>
+        <button class="btn btn-green" onclick="savePost(true)" id="btn-publish">Publish (Public)</button>
       </div>
     </div>
   </div>
@@ -272,50 +374,101 @@
     const REPO_NAME = 'jay-aditya-16.github.io';
     const FILE_PATH = 'blog/data/posts.json';
     const API_BASE = 'https://api.github.com';
+    const STORAGE_KEY = 'blog_admin_token';
 
     let token = '';
     let posts = [];
     let fileSha = '';
     let editingPostId = null;
 
-    // ── AUTH ──
-    function getToken() { return sessionStorage.getItem('blog_admin_token') || ''; }
-    function setToken(t) { sessionStorage.setItem('blog_admin_token', t); }
-    function clearToken() { sessionStorage.removeItem('blog_admin_token'); }
+    // ── AUTH HELPERS ──
+    function getToken() {
+      return localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY) || '';
+    }
+    function setToken(t, remember) {
+      if (remember) {
+        localStorage.setItem(STORAGE_KEY, t);
+        sessionStorage.removeItem(STORAGE_KEY);
+      } else {
+        sessionStorage.setItem(STORAGE_KEY, t);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+    function clearToken() {
+      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
 
+    function toggleTokenVisibility() {
+      const input = document.getElementById('token-input');
+      const btn = document.getElementById('vis-btn');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    // ── STRICT PAT VALIDATION ──
     async function validateToken(t) {
-      const res = await fetch(`${API_BASE}/user`, {
+      // 1. Verify user identity
+      const userRes = await fetch(`${API_BASE}/user`, {
         headers: { 'Authorization': `token ${t}`, 'Accept': 'application/vnd.github.v3+json' }
       });
-      if (!res.ok) return false;
-      const data = await res.json();
-      return data.login.toLowerCase() === REPO_OWNER.toLowerCase();
+      if (!userRes.ok) {
+        throw new Error('Invalid or expired token.');
+      }
+      const user = await userRes.json();
+      if (user.login.toLowerCase() !== REPO_OWNER.toLowerCase()) {
+        throw new Error(`Unauthorized: Token belongs to @${user.login}. Only @${REPO_OWNER} can access.`);
+      }
+
+      // 2. Verify repository write/push permission
+      const repoRes = await fetch(`${API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}`, {
+        headers: { 'Authorization': `token ${t}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!repoRes.ok) {
+        throw new Error('Token cannot access repository.');
+      }
+      const repo = await repoRes.json();
+      if (!repo.permissions || !repo.permissions.push) {
+        throw new Error('Token lacks write (repo) permissions to this repository.');
+      }
+
+      return true;
     }
 
     async function handleLogin() {
       const input = document.getElementById('token-input');
       const error = document.getElementById('login-error');
+      const btn = document.getElementById('btn-login');
+      const remember = document.getElementById('remember-me').checked;
       const t = input.value.trim();
-      if (!t) { error.textContent = 'Please enter a token.'; error.style.display = 'block'; return; }
+
+      if (!t) {
+        error.textContent = 'Please enter your GitHub Personal Access Token.';
+        error.style.display = 'block';
+        return;
+      }
 
       error.style.display = 'none';
-      input.disabled = true;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Verifying...';
 
       try {
-        const valid = await validateToken(t);
-        if (valid) {
-          token = t;
-          setToken(t);
-          showAdmin();
-        } else {
-          error.textContent = 'Invalid token or not authorized for this repo.';
-          error.style.display = 'block';
-        }
+        await validateToken(t);
+        token = t;
+        setToken(t, remember);
+        showAdmin();
       } catch (e) {
-        error.textContent = 'Network error. Try again.';
+        error.textContent = e.message || 'Authentication failed.';
         error.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
       }
-      input.disabled = false;
     }
 
     function handleLogout() {
@@ -324,6 +477,7 @@
       document.getElementById('admin-panel').style.display = 'none';
       document.getElementById('login-screen').style.display = 'flex';
       document.getElementById('token-input').value = '';
+      document.getElementById('login-error').style.display = 'none';
     }
 
     async function showAdmin() {
@@ -332,9 +486,9 @@
       await loadPosts();
     }
 
-    // ── GITHUB API ──
+    // ── GITHUB API HELPERS ──
     async function ghFetch(path, options = {}) {
-      const res = await fetch(`${API_BASE}${path}`, {
+      return fetch(`${API_BASE}${path}`, {
         ...options,
         headers: {
           'Authorization': `token ${token}`,
@@ -343,34 +497,58 @@
           ...(options.headers || {})
         }
       });
-      return res;
+    }
+
+    // Safe UTF-8 Base64 Helpers
+    function utf8ToBase64(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+        return String.fromCharCode(parseInt(p1, 16));
+      }));
+    }
+
+    function base64ToUtf8(str) {
+      return decodeURIComponent(Array.prototype.map.call(atob(str), (c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
     }
 
     async function loadPosts() {
       try {
-        const res = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`);
+        const res = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main&t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
           fileSha = data.sha;
-          const content = atob(data.content.replace(/\n/g, ''));
+          const cleanBase64 = data.content.replace(/\n/g, '');
+          const content = base64ToUtf8(cleanBase64);
           posts = JSON.parse(content);
         } else if (res.status === 404) {
           posts = [];
           fileSha = '';
         } else {
-          throw new Error('Failed to load');
+          throw new Error('Failed to fetch posts from repository.');
         }
         renderPostList();
       } catch (e) {
-        showToast('Failed to load posts: ' + e.message, true);
+        showToast('Error loading posts: ' + e.message, true);
       }
     }
 
     async function savePosts(commitMsg) {
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+      // Re-fetch latest SHA to prevent 409 SHA conflict
+      try {
+        const check = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main&t=${Date.now()}`);
+        if (check.ok) {
+          const checkData = await check.json();
+          fileSha = checkData.sha;
+        }
+      } catch (e) {}
+
+      const jsonStr = JSON.stringify(posts, null, 2);
+      const encodedContent = utf8ToBase64(jsonStr);
+
       const body = {
         message: commitMsg,
-        content: content,
+        content: encodedContent,
         branch: 'main'
       };
       if (fileSha) body.sha = fileSha;
@@ -382,7 +560,7 @@
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.message || 'Failed to save');
+        throw new Error(err.message || 'Failed to commit to repository');
       }
 
       const data = await res.json();
@@ -393,7 +571,7 @@
     function renderPostList() {
       const container = document.getElementById('admin-posts');
       if (posts.length === 0) {
-        container.innerHTML = '<div class="empty-admin">No posts yet. Click "+ New Post" to get started.</div>';
+        container.innerHTML = '<div class="empty-admin">No posts yet. Click "+ New Post" to start writing.</div>';
         return;
       }
 
@@ -402,15 +580,19 @@
         const dateStr = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
         const statusClass = post.visible ? 'status-public' : 'status-private';
         const statusText = post.visible ? 'PUBLIC' : 'PRIVATE';
+        const tags = (post.tags || []).join(', ');
         return `
           <div class="admin-post-item">
             <div class="admin-post-info">
               <div class="admin-post-title">${post.title}</div>
-              <div class="admin-post-date">${dateStr}</div>
+              <div class="admin-post-meta">
+                <span>${dateStr}</span>
+                ${tags ? `<span>·</span><span>${tags}</span>` : ''}
+              </div>
             </div>
             <div class="admin-post-actions">
               <span class="status-badge ${statusClass}">${statusText}</span>
-              <button class="btn btn-ghost btn-sm" onclick="toggleVisibility('${post.id}')">${post.visible ? 'Hide' : 'Show'}</button>
+              <button class="btn btn-ghost btn-sm" onclick="toggleVisibility('${post.id}')">${post.visible ? 'Make Private' : 'Make Public'}</button>
               <button class="btn btn-ghost btn-sm" onclick="editPost('${post.id}')">Edit</button>
               <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(248,113,113,0.3);" onclick="deletePost('${post.id}')">Delete</button>
             </div>
@@ -427,9 +609,9 @@
       try {
         await savePosts(`blog: ${post.visible ? 'publish' : 'unpublish'} '${post.title}'`);
         renderPostList();
-        showToast(post.visible ? 'Post published!' : 'Post hidden.');
+        showToast(post.visible ? 'Post set to Public!' : 'Post set to Private.');
       } catch (e) {
-        post.visible = !post.visible;
+        post.visible = !post.visible; // revert on error
         showToast('Failed to update: ' + e.message, true);
       }
     }
@@ -437,7 +619,7 @@
     async function deletePost(id) {
       const post = posts.find(p => p.id === id);
       if (!post) return;
-      if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+      if (!confirm(`Delete "${post.title}"? This will remove it from the repository.`)) return;
 
       const idx = posts.indexOf(post);
       posts.splice(idx, 1);
@@ -446,7 +628,7 @@
         renderPostList();
         showToast('Post deleted.');
       } catch (e) {
-        posts.splice(idx, 0, post);
+        posts.splice(idx, 0, post); // revert on error
         showToast('Failed to delete: ' + e.message, true);
       }
     }
@@ -498,7 +680,6 @@
 
       let commitAction;
       if (editingPostId) {
-        // Update existing post
         const post = posts.find(p => p.id === editingPostId);
         if (!post) { showToast('Post not found.', true); return; }
         post.title = title;
@@ -508,9 +689,7 @@
         post.date = post.date || today;
         commitAction = 'update';
       } else {
-        // Create new post
         let id = slugify(title);
-        // Ensure unique ID
         if (posts.some(p => p.id === id)) {
           id = id + '-' + Date.now().toString(36);
         }
@@ -518,27 +697,28 @@
         commitAction = 'add';
       }
 
-      // Disable buttons during save
       const btnDraft = document.getElementById('btn-draft');
       const btnPublish = document.getElementById('btn-publish');
       btnDraft.disabled = true; btnPublish.disabled = true;
-      btnDraft.innerHTML = '<span class="spinner"></span>'; btnPublish.innerHTML = '<span class="spinner"></span>';
+      btnDraft.innerHTML = '<span class="spinner"></span> Saving...';
+      btnPublish.innerHTML = '<span class="spinner"></span> Saving...';
 
       try {
         await savePosts(`blog: ${commitAction} post '${title}'`);
         renderPostList();
         closeEditor();
-        showToast(commitAction === 'add' ? 'Post created!' : 'Post updated!');
+        showToast(visible ? 'Post published successfully!' : 'Draft saved privately!');
       } catch (e) {
         if (commitAction === 'add') posts.pop();
-        showToast('Failed to save: ' + e.message, true);
+        showToast('Save failed: ' + e.message, true);
+      } finally {
+        btnDraft.disabled = false; btnPublish.disabled = false;
+        btnDraft.textContent = 'Save as Draft (Private)';
+        btnPublish.textContent = 'Publish (Public)';
       }
-
-      btnDraft.disabled = false; btnPublish.disabled = false;
-      btnDraft.textContent = 'Save as Draft'; btnPublish.textContent = 'Publish';
     }
 
-    // ── TOOLBAR ──
+    // ── TOOLBAR HELPERS ──
     function insertTag(tag) {
       const textarea = document.getElementById('ed-post-content');
       const start = textarea.selectionStart;
@@ -561,19 +741,21 @@
       const before = textarea.value.substring(0, start);
       const after = textarea.value.substring(textarea.selectionEnd);
 
-      const block = `<pre><code>${selected || 'code here'}</code></pre>`;
+      const block = `<pre><code>${selected || 'console.log("hello world");'}</code></pre>`;
       textarea.value = before + block + after;
       textarea.focus();
     }
 
     function insertLink() {
+      const url = prompt('Enter URL:', 'https://');
+      if (!url) return;
       const textarea = document.getElementById('ed-post-content');
       const start = textarea.selectionStart;
       const selected = textarea.value.substring(start, textarea.selectionEnd);
       const before = textarea.value.substring(0, start);
       const after = textarea.value.substring(textarea.selectionEnd);
 
-      const link = `<a href="url">${selected || 'link text'}</a>`;
+      const link = `<a href="${url}" target="_blank" rel="noopener">${selected || 'link text'}</a>`;
       textarea.value = before + link + after;
       textarea.focus();
     }
@@ -584,7 +766,7 @@
       const before = textarea.value.substring(0, start);
       const after = textarea.value.substring(textarea.selectionEnd);
 
-      const list = `<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n  <li>Item 3</li>\n</ul>`;
+      const list = `<ul>\n  <li>First point</li>\n  <li>Second point</li>\n</ul>`;
       textarea.value = before + list + after;
       textarea.focus();
     }
@@ -618,7 +800,7 @@
       const toast = document.getElementById('toast');
       toast.textContent = msg;
       toast.className = 'toast show' + (isError ? ' error' : '');
-      setTimeout(() => { toast.className = 'toast'; }, 3000);
+      setTimeout(() => { toast.className = 'toast'; }, 3200);
     }
 
     // ── INIT ──
@@ -626,19 +808,17 @@
       const saved = getToken();
       if (saved) {
         try {
-          const valid = await validateToken(saved);
-          if (valid) {
-            token = saved;
-            await showAdmin();
-            return;
-          }
-        } catch (e) {}
-        clearToken();
+          await validateToken(saved);
+          token = saved;
+          await showAdmin();
+          return;
+        } catch (e) {
+          clearToken();
+        }
       }
       document.getElementById('login-screen').style.display = 'flex';
     })();
 
-    // Handle Enter key on token input
     document.getElementById('token-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleLogin();
     });
