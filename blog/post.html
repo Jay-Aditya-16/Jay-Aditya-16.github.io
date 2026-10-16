@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post — Jay Aditya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #080808; --white: #f0f0f0; --gray: #666;
+      --surface: #111; --border: #1e1e1e; --border-mid: #2a2a2a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black); color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 740px; margin: 0 auto; padding: 0 32px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,8,0.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 740px; margin: 0 auto; padding: 20px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-name { font-size: 14px; font-weight: 700; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--gray); transition: color 0.15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+
+    /* ── POST ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--gray); padding: 40px 0 0;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--white); }
+
+    .post-header { padding: 32px 0 40px; border-bottom: 1px solid var(--border); }
+    .post-meta {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gray); margin-bottom: 16px;
+    }
+    .post-title {
+      font-size: clamp(32px, 7vw, 52px); font-weight: 900;
+      letter-spacing: -0.035em; line-height: 1.05; margin-bottom: 20px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px; font-weight: 500; padding: 4px 11px;
+      border: 1px solid var(--border-mid); border-radius: 100px; color: var(--gray);
+    }
+
+    /* ── CONTENT ── */
+    .post-content {
+      padding: 48px 0 80px;
+      font-size: 16px; line-height: 1.85; color: var(--white);
+    }
+    .post-content p { margin-bottom: 20px; }
+    .post-content h2 {
+      font-size: 24px; font-weight: 800; letter-spacing: -0.02em;
+      margin: 48px 0 16px; color: var(--white);
+    }
+    .post-content h3 {
+      font-size: 18px; font-weight: 700;
+      margin: 36px 0 12px; color: var(--white);
+    }
+    .post-content ul, .post-content ol {
+      margin: 0 0 20px 24px; color: var(--gray);
+    }
+    .post-content li { margin-bottom: 8px; color: var(--white); }
+    .post-content blockquote {
+      border-left: 3px solid var(--border-mid); margin: 24px 0;
+      padding: 12px 20px; color: var(--gray); font-style: italic;
+    }
+    .post-content a { color: var(--white); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+    .post-content a:hover { opacity: 0.8; }
+    .post-content code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--surface); border: 1px solid var(--border-mid);
+      padding: 2px 7px; border-radius: 4px; font-size: 14px;
+    }
+    .post-content pre {
+      background: var(--surface); border: 1px solid var(--border-mid);
+      border-radius: 8px; padding: 20px 24px; margin: 24px 0;
+      overflow-x: auto;
+    }
+    .post-content pre code {
+      background: none; border: none; padding: 0;
+      font-size: 14px; line-height: 1.6;
+    }
+    .post-content img {
+      max-width: 100%; border-radius: 8px; margin: 24px 0;
+      border: 1px solid var(--border-mid);
+    }
+    .post-content strong { font-weight: 700; color: var(--white); }
+    .post-content em { color: var(--gray); }
+
+    .not-found {
+      padding: 120px 0; text-align: center;
+      font-size: 15px; color: var(--gray);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 72px 0; text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-motto {
+      font-size: clamp(28px, 6vw, 44px); font-weight: 900;
+      letter-spacing: -0.025em; margin-bottom: 14px;
+    }
+    .footer-sub { font-size: 13px; color: var(--gray); }
+
+    @media (max-width: 640px) {
+      .nav-links { gap: 20px; }
+      .post-header { padding: 24px 0 32px; }
+      .post-content { padding: 32px 0 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-name">jay aditya</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/" class="active">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <a href="/blog/" class="back-link">← Back to Blog</a>
+  </div>
+
+  <div class="container" id="post-container">
+    <div class="not-found" id="loading">Loading…</div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p class="footer-motto">BUILD. PERCEIVE. SHIP.</p>
+      <p class="footer-sub">jay aditya · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    (async () => {
+      const container = document.getElementById('post-container');
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get('id');
+
+      if (!postId) {
+        container.innerHTML = '<div class="not-found">Post not found.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch('/blog/data/posts.json?' + Date.now());
+        const posts = await res.json();
+        const post = posts.find(p => p.id === postId && p.visible);
+
+        if (!post) {
+          container.innerHTML = '<div class="not-found">Post not found.</div>';
+          document.title = 'Not Found — Jay Aditya';
+          return;
+        }
+
+        document.title = post.title + ' — Jay Aditya';
+
+        const dateStr = new Date(post.date).toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const tags = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+        container.innerHTML = `
+          <div class="post-header">
+            <div class="post-meta">${dateStr}</div>
+            <h1 class="post-title">${post.title}</h1>
+            ${tags ? `<div class="tag-row">${tags}</div>` : ''}
+          </div>
+          <div class="post-content">${post.content}</div>
+        `;
+      } catch (e) {
+        container.innerHTML = '<div class="not-found">Failed to load post.</div>';
+      }
+    })();
+  </script>
+
+</body>
+</html>

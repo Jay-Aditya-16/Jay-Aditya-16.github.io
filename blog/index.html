@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Jay Aditya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #080808; --white: #f0f0f0; --gray: #666;
+      --surface: #111; --border: #1e1e1e; --border-mid: #2a2a2a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black); color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 740px; margin: 0 auto; padding: 0 32px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,8,0.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 740px; margin: 0 auto; padding: 20px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-name { font-size: 14px; font-weight: 700; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 13px; color: var(--gray); transition: color 0.15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+
+    /* ── HERO ── */
+    .blog-hero {
+      padding: 80px 0 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .blog-hero h1 {
+      font-size: clamp(42px, 8vw, 64px); font-weight: 900;
+      letter-spacing: -0.035em; line-height: 0.95; margin-bottom: 16px;
+    }
+    .blog-hero p {
+      font-size: 16px; color: var(--gray); line-height: 1.75;
+    }
+
+    /* ── POST LIST ── */
+    .posts-list { padding: 20px 0 80px; }
+    .post-card {
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .post-card:hover { background: rgba(255,255,255,0.015); margin: 0 -16px; padding: 28px 16px; border-radius: 8px; border-color: transparent; }
+    .post-card:last-child { border-bottom: none; }
+    .post-date {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gray); margin-bottom: 8px;
+    }
+    .post-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 10px; line-height: 1.3;
+    }
+    .post-excerpt {
+      font-size: 14px; color: var(--gray); line-height: 1.65;
+      margin-bottom: 12px; max-width: 600px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px; font-weight: 500; padding: 4px 11px;
+      border: 1px solid var(--border-mid); border-radius: 100px; color: var(--gray);
+    }
+    .empty-state {
+      padding: 80px 0; text-align: center;
+      font-size: 15px; color: var(--gray);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 72px 0; text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-motto {
+      font-size: clamp(28px, 6vw, 44px); font-weight: 900;
+      letter-spacing: -0.025em; margin-bottom: 14px;
+    }
+    .footer-sub { font-size: 13px; color: var(--gray); }
+
+    @media (max-width: 640px) {
+      .nav-links { gap: 20px; }
+      .blog-hero { padding: 56px 0 36px; }
+      .post-card:hover { margin: 0; padding: 28px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-name">jay aditya</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/" class="active">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="blog-hero">
+    <div class="container">
+      <h1>blog</h1>
+      <p>Thoughts, builds, and lessons.</p>
+    </div>
+  </section>
+
+  <section class="posts-list">
+    <div class="container" id="posts-container">
+      <div class="empty-state" id="loading">Loading…</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p class="footer-motto">BUILD. PERCEIVE. SHIP.</p>
+      <p class="footer-sub">jay aditya · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    (async () => {
+      const container = document.getElementById('posts-container');
+      try {
+        const res = await fetch('/blog/data/posts.json?' + Date.now());
+        const posts = await res.json();
+        const visible = posts
+          .filter(p => p.visible)
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (visible.length === 0) {
+          container.innerHTML = '<div class="empty-state">No posts yet.</div>';
+          return;
+        }
+
+        container.innerHTML = visible.map(post => {
+          const dateStr = new Date(post.date).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+          });
+          // Strip HTML tags for excerpt
+          const tmp = document.createElement('div');
+          tmp.innerHTML = post.content;
+          const excerpt = tmp.textContent.substring(0, 150) + (tmp.textContent.length > 150 ? '…' : '');
+          const tags = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+          return `
+            <a href="/blog/post.html?id=${encodeURIComponent(post.id)}" class="post-card" style="display:block;">
+              <div class="post-date">${dateStr}</div>
+              <div class="post-title">${post.title}</div>
+              <div class="post-excerpt">${excerpt}</div>
+              ${tags ? `<div class="tag-row">${tags}</div>` : ''}
+            </a>
+          `;
+        }).join('');
+      } catch (e) {
+        container.innerHTML = '<div class="empty-state">No posts yet.</div>';
+      }
+    })();
+  </script>
+
+</body>
+</html>

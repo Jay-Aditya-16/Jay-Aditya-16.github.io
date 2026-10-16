@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Admin — Jay Aditya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #080808; --white: #f0f0f0; --gray: #666;
+      --surface: #111; --border: #1e1e1e; --border-mid: #2a2a2a;
+      --green: #2dd4a0; --red: #f87171; --blue: #60a5fa;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black); color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LOGIN ── */
+    .login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 32px;
+    }
+    .login-box {
+      width: 100%; max-width: 400px;
+      border: 1px solid var(--border-mid); border-radius: 12px;
+      padding: 40px 36px; background: var(--surface);
+    }
+    .login-box h1 {
+      font-size: 24px; font-weight: 900; letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .login-box p { font-size: 14px; color: var(--gray); margin-bottom: 28px; line-height: 1.6; }
+    .login-box label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px; }
+    .login-box input {
+      width: 100%; background: var(--black); border: 1px solid var(--border-mid);
+      color: var(--white); font-family: inherit; font-size: 14px;
+      padding: 12px 16px; border-radius: 7px; margin-bottom: 20px;
+      outline: none; transition: border-color 0.15s;
+    }
+    .login-box input:focus { border-color: #444; }
+    .login-error { color: var(--red); font-size: 13px; margin-bottom: 16px; display: none; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 700;
+      padding: 10px 20px; border-radius: 7px; border: none;
+      cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: var(--white); color: var(--black); }
+    .btn-ghost { background: none; color: var(--gray); border: 1px solid var(--border-mid); }
+    .btn-ghost:hover { color: var(--white); border-color: #444; }
+    .btn-green { background: var(--green); color: var(--black); }
+    .btn-red { background: var(--red); color: var(--black); }
+    .btn-blue { background: var(--blue); color: var(--black); }
+    .btn-sm { font-size: 11px; padding: 6px 12px; }
+
+    /* ── ADMIN LAYOUT ── */
+    .admin-container { max-width: 860px; margin: 0 auto; padding: 0 32px; }
+    .admin-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+      padding: 32px 0; border-bottom: 1px solid var(--border);
+    }
+    .admin-header h1 { font-size: 24px; font-weight: 900; letter-spacing: -0.025em; }
+    .admin-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* ── POST LIST ── */
+    .admin-posts { padding: 16px 0 80px; }
+    .admin-post-item {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-post-item:last-child { border-bottom: none; }
+    .admin-post-info { flex: 1; min-width: 0; }
+    .admin-post-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-post-date { font-size: 12px; color: var(--gray); }
+    .admin-post-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .status-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+    }
+    .status-public { background: rgba(45,212,160,0.15); color: var(--green); }
+    .status-private { background: rgba(248,113,113,0.15); color: var(--red); }
+    .empty-admin { padding: 60px 0; text-align: center; font-size: 14px; color: var(--gray); }
+
+    /* ── EDITOR ── */
+    .editor-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: var(--black); overflow-y: auto;
+    }
+    .editor-overlay.open { display: block; }
+    .editor-container { max-width: 860px; margin: 0 auto; padding: 32px; }
+    .editor-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+    }
+    .editor-top h2 { font-size: 20px; font-weight: 800; }
+    .field-group { margin-bottom: 24px; }
+    .field-group label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px;
+    }
+    .field-group input, .field-group textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border-mid);
+      color: var(--white); font-family: inherit; font-size: 14px;
+      padding: 12px 16px; border-radius: 7px; outline: none;
+      transition: border-color 0.15s;
+    }
+    .field-group input:focus, .field-group textarea:focus { border-color: #444; }
+    .field-group textarea { min-height: 340px; resize: vertical; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      padding: 8px; background: var(--surface); border: 1px solid var(--border-mid);
+      border-bottom: none; border-radius: 7px 7px 0 0; margin-top: 8px;
+    }
+    .toolbar + textarea { border-radius: 0 0 7px 7px; }
+    .tool-btn {
+      background: none; border: 1px solid transparent; color: var(--gray);
+      font-family: inherit; font-size: 12px; font-weight: 600;
+      padding: 5px 10px; border-radius: 4px; cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+    }
+    .tool-btn:hover { color: var(--white); background: rgba(255,255,255,0.05); border-color: var(--border-mid); }
+
+    /* ── PREVIEW ── */
+    .preview-area {
+      display: none; background: var(--surface); border: 1px solid var(--border-mid);
+      border-radius: 7px; padding: 24px; min-height: 200px;
+      font-size: 15px; line-height: 1.8;
+    }
+    .preview-area.open { display: block; }
+    .preview-area h2 { font-size: 22px; font-weight: 800; margin: 24px 0 12px; }
+    .preview-area h3 { font-size: 17px; font-weight: 700; margin: 20px 0 10px; }
+    .preview-area p { margin-bottom: 16px; color: var(--white); }
+    .preview-area ul { margin: 0 0 16px 20px; }
+    .preview-area li { margin-bottom: 6px; }
+    .preview-area blockquote { border-left: 3px solid var(--border-mid); padding: 8px 16px; color: var(--gray); margin: 16px 0; font-style: italic; }
+    .preview-area code { font-family: 'SF Mono', 'Fira Code', monospace; background: var(--black); padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+    .preview-area pre { background: var(--black); border: 1px solid var(--border-mid); border-radius: 6px; padding: 16px; margin: 16px 0; overflow-x: auto; }
+    .preview-area pre code { background: none; padding: 0; }
+    .preview-area a { color: var(--blue); text-decoration: underline; }
+    .preview-area strong { color: var(--white); font-weight: 700; }
+    .preview-area em { color: var(--gray); }
+
+    .editor-footer {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      padding-top: 24px; border-top: 1px solid var(--border);
+      margin-top: 32px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border-mid);
+      color: var(--white); font-size: 14px; font-weight: 600;
+      padding: 14px 28px; border-radius: 8px; z-index: 300;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { border-color: var(--red); color: var(--red); }
+
+    /* ── SPINNER ── */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid var(--border-mid); border-top-color: var(--white);
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .admin-post-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .admin-post-actions { width: 100%; flex-wrap: wrap; }
+      .editor-footer { flex-direction: column; }
+      .editor-footer .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-box">
+      <h1>blog admin</h1>
+      <p>Enter your GitHub Personal Access Token to manage your blog. The token needs <code style="font-family:'SF Mono',monospace;background:var(--black);padding:2px 6px;border-radius:3px;font-size:13px;">repo</code> scope.</p>
+      <label for="token-input">GitHub PAT</label>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
+      <div class="login-error" id="login-error"></div>
+      <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;justify-content:center;">Sign In</button>
+    </div>
+  </div>
+
+  <!-- ── ADMIN PANEL ── -->
+  <div id="admin-panel" style="display:none;">
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>blog admin</h1>
+        <div class="admin-actions">
+          <button class="btn btn-primary" onclick="openEditor()">+ New Post</button>
+          <button class="btn btn-ghost" onclick="handleLogout()">Logout</button>
+        </div>
+      </div>
+      <div class="admin-posts" id="admin-posts">
+        <div class="empty-admin">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EDITOR OVERLAY ── -->
+  <div class="editor-overlay" id="editor-overlay">
+    <div class="editor-container">
+      <div class="editor-top">
+        <h2 id="editor-title">New Post</h2>
+        <button class="btn btn-ghost" onclick="closeEditor()">✕ Close</button>
+      </div>
+
+      <div class="field-group">
+        <label for="ed-post-title">Title</label>
+        <input type="text" id="ed-post-title" placeholder="My awesome post" />
+      </div>
+
+      <div class="field-group">
+        <label for="ed-post-tags">Tags (comma-separated)</label>
+        <input type="text" id="ed-post-tags" placeholder="ai, robotics, thoughts" />
+      </div>
+
+      <div class="field-group">
+        <label>Content (HTML)</label>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:12px;color:var(--gray);">Write HTML — use toolbar to insert tags</span>
+          <button class="tool-btn" onclick="togglePreview()" id="preview-toggle">Preview</button>
+        </div>
+        <div class="toolbar" id="toolbar">
+          <button class="tool-btn" onclick="insertTag('strong')" title="Bold"><b>B</b></button>
+          <button class="tool-btn" onclick="insertTag('em')" title="Italic"><i>I</i></button>
+          <button class="tool-btn" onclick="insertTag('h2')" title="Heading 2">H2</button>
+          <button class="tool-btn" onclick="insertTag('h3')" title="Heading 3">H3</button>
+          <button class="tool-btn" onclick="insertCodeBlock()" title="Code Block">&lt;/&gt;</button>
+          <button class="tool-btn" onclick="insertLink()" title="Link">Link</button>
+          <button class="tool-btn" onclick="insertList()" title="List">• List</button>
+          <button class="tool-btn" onclick="insertTag('blockquote')" title="Quote">" Quote</button>
+          <button class="tool-btn" onclick="insertTag('p')" title="Paragraph">¶</button>
+        </div>
+        <textarea id="ed-post-content" placeholder="<p>Write your post here…</p>"></textarea>
+        <div class="preview-area" id="preview-area"></div>
+      </div>
+
+      <div class="editor-footer">
+        <button class="btn btn-ghost" onclick="savePost(false)" id="btn-draft">Save as Draft</button>
+        <button class="btn btn-green" onclick="savePost(true)" id="btn-publish">Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const REPO_OWNER = 'Jay-Aditya-16';
+    const REPO_NAME = 'jay-aditya-16.github.io';
+    const FILE_PATH = 'blog/data/posts.json';
+    const API_BASE = 'https://api.github.com';
+
+    let token = '';
+    let posts = [];
+    let fileSha = '';
+    let editingPostId = null;
+
+    // ── AUTH ──
+    function getToken() { return sessionStorage.getItem('blog_admin_token') || ''; }
+    function setToken(t) { sessionStorage.setItem('blog_admin_token', t); }
+    function clearToken() { sessionStorage.removeItem('blog_admin_token'); }
+
+    async function validateToken(t) {
+      const res = await fetch(`${API_BASE}/user`, {
+        headers: { 'Authorization': `token ${t}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) return false;
+      const data = await res.json();
+      return data.login.toLowerCase() === REPO_OWNER.toLowerCase();
+    }
+
+    async function handleLogin() {
+      const input = document.getElementById('token-input');
+      const error = document.getElementById('login-error');
+      const t = input.value.trim();
+      if (!t) { error.textContent = 'Please enter a token.'; error.style.display = 'block'; return; }
+
+      error.style.display = 'none';
+      input.disabled = true;
+
+      try {
+        const valid = await validateToken(t);
+        if (valid) {
+          token = t;
+          setToken(t);
+          showAdmin();
+        } else {
+          error.textContent = 'Invalid token or not authorized for this repo.';
+          error.style.display = 'block';
+        }
+      } catch (e) {
+        error.textContent = 'Network error. Try again.';
+        error.style.display = 'block';
+      }
+      input.disabled = false;
+    }
+
+    function handleLogout() {
+      clearToken();
+      token = '';
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('token-input').value = '';
+    }
+
+    async function showAdmin() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      await loadPosts();
+    }
+
+    // ── GITHUB API ──
+    async function ghFetch(path, options = {}) {
+      const res = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+      return res;
+    }
+
+    async function loadPosts() {
+      try {
+        const res = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`);
+        if (res.ok) {
+          const data = await res.json();
+          fileSha = data.sha;
+          const content = atob(data.content.replace(/\n/g, ''));
+          posts = JSON.parse(content);
+        } else if (res.status === 404) {
+          posts = [];
+          fileSha = '';
+        } else {
+          throw new Error('Failed to load');
+        }
+        renderPostList();
+      } catch (e) {
+        showToast('Failed to load posts: ' + e.message, true);
+      }
+    }
+
+    async function savePosts(commitMsg) {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2))));
+      const body = {
+        message: commitMsg,
+        content: content,
+        branch: 'main'
+      };
+      if (fileSha) body.sha = fileSha;
+
+      const res = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+        method: 'PUT',
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Failed to save');
+      }
+
+      const data = await res.json();
+      fileSha = data.content.sha;
+    }
+
+    // ── RENDER POST LIST ──
+    function renderPostList() {
+      const container = document.getElementById('admin-posts');
+      if (posts.length === 0) {
+        container.innerHTML = '<div class="empty-admin">No posts yet. Click "+ New Post" to get started.</div>';
+        return;
+      }
+
+      const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+      container.innerHTML = sorted.map(post => {
+        const dateStr = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        const statusClass = post.visible ? 'status-public' : 'status-private';
+        const statusText = post.visible ? 'PUBLIC' : 'PRIVATE';
+        return `
+          <div class="admin-post-item">
+            <div class="admin-post-info">
+              <div class="admin-post-title">${post.title}</div>
+              <div class="admin-post-date">${dateStr}</div>
+            </div>
+            <div class="admin-post-actions">
+              <span class="status-badge ${statusClass}">${statusText}</span>
+              <button class="btn btn-ghost btn-sm" onclick="toggleVisibility('${post.id}')">${post.visible ? 'Hide' : 'Show'}</button>
+              <button class="btn btn-ghost btn-sm" onclick="editPost('${post.id}')">Edit</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(248,113,113,0.3);" onclick="deletePost('${post.id}')">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── ACTIONS ──
+    async function toggleVisibility(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+      post.visible = !post.visible;
+      try {
+        await savePosts(`blog: ${post.visible ? 'publish' : 'unpublish'} '${post.title}'`);
+        renderPostList();
+        showToast(post.visible ? 'Post published!' : 'Post hidden.');
+      } catch (e) {
+        post.visible = !post.visible;
+        showToast('Failed to update: ' + e.message, true);
+      }
+    }
+
+    async function deletePost(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+      if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+
+      const idx = posts.indexOf(post);
+      posts.splice(idx, 1);
+      try {
+        await savePosts(`blog: delete '${post.title}'`);
+        renderPostList();
+        showToast('Post deleted.');
+      } catch (e) {
+        posts.splice(idx, 0, post);
+        showToast('Failed to delete: ' + e.message, true);
+      }
+    }
+
+    function editPost(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+      editingPostId = id;
+      document.getElementById('editor-title').textContent = 'Edit Post';
+      document.getElementById('ed-post-title').value = post.title;
+      document.getElementById('ed-post-tags').value = (post.tags || []).join(', ');
+      document.getElementById('ed-post-content').value = post.content;
+      document.getElementById('editor-overlay').classList.add('open');
+      hidePreview();
+    }
+
+    // ── EDITOR ──
+    function openEditor() {
+      editingPostId = null;
+      document.getElementById('editor-title').textContent = 'New Post';
+      document.getElementById('ed-post-title').value = '';
+      document.getElementById('ed-post-tags').value = '';
+      document.getElementById('ed-post-content').value = '';
+      document.getElementById('editor-overlay').classList.add('open');
+      hidePreview();
+    }
+
+    function closeEditor() {
+      document.getElementById('editor-overlay').classList.remove('open');
+      editingPostId = null;
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().trim()
+        .replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '')
+        .substring(0, 60);
+    }
+
+    async function savePost(visible) {
+      const title = document.getElementById('ed-post-title').value.trim();
+      const tagsStr = document.getElementById('ed-post-tags').value.trim();
+      const content = document.getElementById('ed-post-content').value.trim();
+
+      if (!title) { showToast('Title is required.', true); return; }
+      if (!content) { showToast('Content is required.', true); return; }
+
+      const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+      const today = new Date().toISOString().split('T')[0];
+
+      let commitAction;
+      if (editingPostId) {
+        // Update existing post
+        const post = posts.find(p => p.id === editingPostId);
+        if (!post) { showToast('Post not found.', true); return; }
+        post.title = title;
+        post.tags = tags;
+        post.content = content;
+        post.visible = visible;
+        post.date = post.date || today;
+        commitAction = 'update';
+      } else {
+        // Create new post
+        let id = slugify(title);
+        // Ensure unique ID
+        if (posts.some(p => p.id === id)) {
+          id = id + '-' + Date.now().toString(36);
+        }
+        posts.push({ id, title, date: today, tags, content, visible });
+        commitAction = 'add';
+      }
+
+      // Disable buttons during save
+      const btnDraft = document.getElementById('btn-draft');
+      const btnPublish = document.getElementById('btn-publish');
+      btnDraft.disabled = true; btnPublish.disabled = true;
+      btnDraft.innerHTML = '<span class="spinner"></span>'; btnPublish.innerHTML = '<span class="spinner"></span>';
+
+      try {
+        await savePosts(`blog: ${commitAction} post '${title}'`);
+        renderPostList();
+        closeEditor();
+        showToast(commitAction === 'add' ? 'Post created!' : 'Post updated!');
+      } catch (e) {
+        if (commitAction === 'add') posts.pop();
+        showToast('Failed to save: ' + e.message, true);
+      }
+
+      btnDraft.disabled = false; btnPublish.disabled = false;
+      btnDraft.textContent = 'Save as Draft'; btnPublish.textContent = 'Publish';
+    }
+
+    // ── TOOLBAR ──
+    function insertTag(tag) {
+      const textarea = document.getElementById('ed-post-content');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selected = textarea.value.substring(start, end);
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(end);
+
+      const wrapped = `<${tag}>${selected}</${tag}>`;
+      textarea.value = before + wrapped + after;
+      textarea.focus();
+      textarea.selectionStart = start + tag.length + 2;
+      textarea.selectionEnd = start + tag.length + 2 + selected.length;
+    }
+
+    function insertCodeBlock() {
+      const textarea = document.getElementById('ed-post-content');
+      const start = textarea.selectionStart;
+      const selected = textarea.value.substring(start, textarea.selectionEnd);
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(textarea.selectionEnd);
+
+      const block = `<pre><code>${selected || 'code here'}</code></pre>`;
+      textarea.value = before + block + after;
+      textarea.focus();
+    }
+
+    function insertLink() {
+      const textarea = document.getElementById('ed-post-content');
+      const start = textarea.selectionStart;
+      const selected = textarea.value.substring(start, textarea.selectionEnd);
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(textarea.selectionEnd);
+
+      const link = `<a href="url">${selected || 'link text'}</a>`;
+      textarea.value = before + link + after;
+      textarea.focus();
+    }
+
+    function insertList() {
+      const textarea = document.getElementById('ed-post-content');
+      const start = textarea.selectionStart;
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(textarea.selectionEnd);
+
+      const list = `<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n  <li>Item 3</li>\n</ul>`;
+      textarea.value = before + list + after;
+      textarea.focus();
+    }
+
+    // ── PREVIEW ──
+    function togglePreview() {
+      const preview = document.getElementById('preview-area');
+      const textarea = document.getElementById('ed-post-content');
+      const toolbar = document.getElementById('toolbar');
+
+      if (preview.classList.contains('open')) {
+        hidePreview();
+      } else {
+        preview.innerHTML = textarea.value || '<p style="color:var(--gray);">Nothing to preview.</p>';
+        preview.classList.add('open');
+        textarea.style.display = 'none';
+        toolbar.style.display = 'none';
+        document.getElementById('preview-toggle').textContent = 'Edit';
+      }
+    }
+
+    function hidePreview() {
+      document.getElementById('preview-area').classList.remove('open');
+      document.getElementById('ed-post-content').style.display = 'block';
+      document.getElementById('toolbar').style.display = 'flex';
+      document.getElementById('preview-toggle').textContent = 'Preview';
+    }
+
+    // ── TOAST ──
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast show' + (isError ? ' error' : '');
+      setTimeout(() => { toast.className = 'toast'; }, 3000);
+    }
+
+    // ── INIT ──
+    (async () => {
+      const saved = getToken();
+      if (saved) {
+        try {
+          const valid = await validateToken(saved);
+          if (valid) {
+            token = saved;
+            await showAdmin();
+            return;
+          }
+        } catch (e) {}
+        clearToken();
+      }
+      document.getElementById('login-screen').style.display = 'flex';
+    })();
+
+    // Handle Enter key on token input
+    document.getElementById('token-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+
+</body>
+</html>
