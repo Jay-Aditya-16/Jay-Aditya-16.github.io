@@ -184,13 +184,25 @@
         });
         const tags = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
 
+        function renderBody(raw) {
+          if (!raw) return '';
+          if (!/<[a-z][\s\S]*>/i.test(raw)) {
+            return raw
+              .split(/\n\s*\n/)
+              .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+              .filter(p => p !== '<p></p>')
+              .join('');
+          }
+          return raw;
+        }
+
         container.innerHTML = `
           <div class="post-header">
             <div class="post-meta">${dateStr}</div>
             <h1 class="post-title">${post.title}</h1>
             ${tags ? `<div class="tag-row">${tags}</div>` : ''}
           </div>
-          <div class="post-content">${post.content}</div>
+          <div class="post-content">${renderBody(post.content)}</div>
         `;
       } catch (e) {
         container.innerHTML = '<div class="not-found">Failed to load post.</div>';
